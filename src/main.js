@@ -96,6 +96,51 @@ window.addEventListener('scroll', () => {
   lastScroll = currentScroll;
 });
 
+document.addEventListener('mousemove', (e) => {
+  if (!header) return;
+
+  const rect = header.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+
+  if (y >= 0 && y <= rect.height) {
+    const xPercent = (x / rect.width - 0.5) * 2;
+    const yPercent = (y / rect.height - 0.5) * 2;
+
+    header.style.setProperty('--mouse-x', `${xPercent * 5}deg`);
+    header.style.setProperty('--mouse-y', `${yPercent * 3}deg`);
+  }
+});
+
+const navLinks = document.querySelectorAll('nav a');
+navLinks.forEach(link => {
+  link.addEventListener('mouseenter', function(e) {
+    const rect = this.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    this.style.setProperty('--link-x', `${x}px`);
+    this.style.setProperty('--link-y', `${y}px`);
+  });
+
+  link.addEventListener('mousemove', function(e) {
+    const rect = this.getBoundingClientRect();
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const deltaX = (x - centerX) / centerX;
+    const deltaY = (y - centerY) / centerY;
+
+    this.style.transform = `translateY(-2px) scale(1.05) translate(${deltaX * 3}px, ${deltaY * 2}px)`;
+  });
+
+  link.addEventListener('mouseleave', function() {
+    this.style.transform = '';
+  });
+});
+
 function initAnimations() {
   const observerOptions = {
     threshold: 0.1,
